@@ -1,5 +1,4 @@
 import Criaturas, Itens
-from Classesgen import criaturas, itens
 import Personagem
 
 achaCriatura = Criaturas.Criatura.achaCriatura

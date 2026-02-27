@@ -1,4 +1,3 @@
-from Classesgen import Item, Arma, Armadura, Util, itens
 from random import randint
 
 nome = "Carlos"
@@ -24,55 +23,47 @@ mult = {
     "MEN": 1,
     "VON": 1
 }
-entro = 5
+entro = 8
 pericias = [
-    {"nome": "Força", "bon": 0, "atrbase": "COR"},
+    {"nome": "Destruir", "bon": 0, "atrbase": "COR"},
     {"nome": "Resistência", "bon": 0, "atrbase": "COR"},
-    {"nome": "Furtividade", "bon": 0, "atrbase": "AGI"},
-    {"nome": "Precisão", "bon": 0, "atrbase": "AGI"},
-    {"nome": "Percepção", "bon": 0, "atrbase": "MEN"},
-    {"nome": "Memória", "bon": 0, "atrbase": "MEN"},
-    {"nome": "Concentração", "bon": 0, "atrbase": "VON"},
-    {"nome": "Intimidação", "bon": 0, "atrbase": "VON"}
+    {"nome": "Esconder", "bon": 0, "atrbase": "AGI"},
+    {"nome": "Arremessar", "bon": 0, "atrbase": "AGI"},
+    {"nome": "Encontrar", "bon": 0, "atrbase": "MEN"},
+    {"nome": "Curar", "bon": 0, "atrbase": "MEN"},
+    {"nome": "Resistir", "bon": 0, "atrbase": "VON"},
+    {"nome": "Comunicar", "bon": 0, "atrbase": "VON"}
 ]
 
 ataVel = 1
 condicoes = []
-inventario = [Item().cod]
+inventario = [("1", 1), ("W1", 1)]
 
-arma = Arma().cod #A arma equipada inicial são os Punhos do Jogador
+arma = "W1" #A arma equipada inicial são os Punhos do Jogador
 armadura = None
 
 #Muda a quantidade de itens no inventario
 def interItem(item, qunt=1):
-    i = Item.achaItem(item)
-    if item in inventario:
-        i.qunt += qunt
-        if i.qunt <= 0: inventario.remove(item)
-    elif qunt > 0:
-        inventario.append(item)
-    
-def equipar(equi):
-    match Item.achaItem(equi).tipo:
-        case "ARMA":
-            global arma
-            arma = equi
-        case "ARMADURA":
-            global armadura
-            armadura = equi
+    for i, it in enumerate(inventario):
+        if it[0] == item:
+            it[1] += qunt
+            if it[0] < 1: del inventario[i]
+            break
+    else:
+        if qunt > 0:
+            inventario.append((item, qunt))
 
-def usar(util):
-    u = Item.achaItem(util)
-    if u.tipo != "UTIL": return
-
-    for efeito in u.efeito():
+def receberEfeito(origem, code):#Os parâmetros são o código do item e a lista de códigos que vieram do efeito do utilitário
+    for efeito in code():
         match efeito[1]:
             case "VID":
-                vida[0] += efeito[0]
+                vida[1] += efeito[1]
+                if vida[1] > vida[0]: vida[1] = vida[0]
+
             case "COR"|"AGI"|"MEN"|"VON":
                 bonusTemp[efeito[1]] += efeito[0]
     
-    interItem(util, -1)
+    interItem(origem, -1)
 
 def listInven():
     return [f"{Item.achaItem(i).qunt} | {Item.achaItem(i).nome}" for i in inventario]
@@ -95,23 +86,26 @@ def bonPericia(pericia):
 
     return 0
 
-def atacar():
-    a = Item.achaItem(arma)
-    dano = (a.getDano() + bonPericia(a.pericia))
+def atacar(arma):
+    dano = (arma.getDano() + bonPericia(arma.pericia))
+    crit = False
+
     if randint(1, 100) <= (20*getBon("VON")):
         print("CRITICO!")
+        crit = True
         dano*=2
 
-    return dano
+    return (dano, crit, getBon("MEN"))
 
-def sofrerDano(dano, intIni):
-    desviar = getBon("MEN")*10
-    porcMax = 100 + (intIni*10)
-    danofin = dano
-    if randint(1, porcMax) > desviar:
+def sofrerDano(info):
+    desviar = getBon("AGI")*10
+    porcMax = 100 + (info[2]*10)
+    danofin = info[0]
+
+    if randint(1, porcMax) > desviar or info[1]:
         if vida[2] > 0:
             danofin -= vida[2]
-            vida[2] -= dano
+            vida[2] -= info[0]
             if danofin < 0: danofin = 0
             if vida[2] < 0: vida[2] = 0
         
