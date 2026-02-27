@@ -78,6 +78,8 @@ def getBon(atr):
             return 0
 
 def bonPericia(pericia):
+    if pericia == "ENT": return (entro - 5)
+    
     for per in pericias:
         if per["nome"] == pericia:
             bonus = getBon(per["atrbase"])

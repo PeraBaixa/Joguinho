@@ -25,7 +25,33 @@ class Arma(Item):
     def getDano(obj):
         
         return obj.danoBase + randint(0, obj.danoExtra)
-    
+
+class MachadoManeiro(Arma):
+    def __init__(obj):
+        super().__init__("Machado Maneiro", 3, "Força", 4)
+
+class EscudoDeMesa(Arma):
+    def __init__(obj):
+        super().__init__("Escudo de Mesa", 1, "Resistência", 3)
+
+class BolasMentais(Arma):
+    def __init__(obj):
+        super().__init__("Esferas de controle remoto", 1, "Concentração", 3)
+
+class FacaNinja(Arma):
+    def __init__(obj):
+        super().__init__("Faca Ninja", 3, "Furtividade", 1)
+
+class MarteloAssustador(Arma):
+    def __init__(obj):
+        super().__init__("Martelo Assustador", 2, "Intimidação", 2)
+
+class Erro(Arma):#Arrumar essa arma:
+    def __init__(obj):
+        super().__init__("????", 0, "ENT", 2)
+
+    def getDano(obj):
+        return obj.danoBase    
 
 def retornaArma(arma):
     match arma:
@@ -39,6 +65,11 @@ class Armadura(Item):
         obj.id = "A1"
         obj.durab = 15
         obj.resis = 2
+
+class Kevlar(Armadura):
+    def __init__(obj):
+        super().__init__("Kevlar")
+
 
 def retornaArmadura(armor):
     match armor:
@@ -69,7 +100,7 @@ class PotMente(Util):
     
     def efeito(obj):
         return [[2, "MEN"], [1, "VON"]]
-    
+
 def retornaUtil(util):
     match util:
         case "U1":
