@@ -65,9 +65,6 @@ def receberEfeito(origem, code):#Os parâmetros são o código do item e a lista
     
     interItem(origem, -1)
 
-def listInven():
-    return [f"{Item.achaItem(i).qunt} | {Item.achaItem(i).nome}" for i in inventario]
-
 def getBon(atr):
     match atr.upper():
         case "COR"|"AGI"|"MEN"|"VON":

@@ -1,11 +1,11 @@
 import Criaturas, Itens
 import Personagem
 
-achaCriatura = Criaturas.Criatura.achaCriatura
+achaCriatura = Criaturas.achaCriatura
 achaItem = Itens.Item.achaItem
 
 Personagem.iniAtr([8, 6, 4, 4])
-Criaturas.Criatura()
+nerd = Criaturas.Criatura()
 
 
 def criaOrdem(protag=False, *pers):
@@ -29,22 +29,22 @@ def criaOrdem(protag=False, *pers):
     return ordem
 
 #Simulação de combate simples:
-while criaturas[0].vida[1] > 0 and Personagem.vida[1] > 0:
-    print(f"{Personagem.nome}: {Personagem.vida[1]} pv\tMonstro: {criaturas[0].vida[1]} pv")
-    for p in criaOrdem(True, criaturas[0]):
+while nerd.vida[1] > 0 and Personagem.vida[1] > 0:
+    print(f"{Personagem.nome}: {Personagem.vida[1]} pv\tMonstro: {nerd.vida[1]} pv")
+    for p in criaOrdem(True, nerd):
         ataque = 0
         if p == 0:
             ataque = Personagem.atacar()
             print(f"{Personagem.nome} ataca, dando {ataque} de dano")
-            criaturas[0].sofrerDano(ataque, Personagem.getBon("MEN"))
-            if criaturas[0].vida[1] <= 0:
+            nerd.sofrerDano(ataque, Personagem.getBon("MEN"))
+            if nerd.vida[1] <= 0:
                 break
         else:
-            ataque = criaturas[0].atacar()
+            ataque = nerd.atacar()
             print(f"O monstro ataca, dando {ataque} de dano")
-            Personagem.sofrerDano(ataque, criaturas[0].getBon("MEN"))
+            Personagem.sofrerDano(ataque, nerd.getBon("MEN"))
             if Personagem.vida[1] <= 0:
                 break
 else:
-    print(f"{Personagem.nome}: {Personagem.vida[1]} pv\tMonstro: {criaturas[0].vida[1]} pv")
-    print(f"Vencedor: {f"{Personagem.nome} com {Personagem.vida[1]} de pv" if criaturas[0].vida[1] <= 0 else f"o monstro com {criaturas[0].vida[1]}"}")
+    print(f"{Personagem.nome}: {Personagem.vida[1]} pv\tMonstro: {nerd.vida[1]} pv")
+    print(f"Vencedor: {f"{Personagem.nome} com {Personagem.vida[1]} de pv" if nerd.vida[1] <= 0 else f"o monstro com {nerd.vida[1]}"}")
