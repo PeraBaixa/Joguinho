@@ -35,9 +35,8 @@ pericias = [
     {"nome": "Comunicar", "bon": 0, "atrbase": "VON"}
 ]
 
-ataVel = 1
 condicoes = []
-inventario = [("1", 1), ("W1", 1)]
+inventario = [["1", 1], ["W1", 1]]
 
 arma = "W1" #A arma equipada inicial são os Punhos do Jogador
 armadura = None
@@ -113,8 +112,6 @@ def sofrerDano(info):
         print(nome + " desviou!")
 
 def iniAtr(ats):
-    global ataVel
-
     atrs["COR"] = ats[0]
     atrs["AGI"] = ats[1]
     atrs["MEN"] = ats[2]
@@ -123,21 +120,7 @@ def iniAtr(ats):
     vida[0] = atrs["COR"]*2
     vida[1] = atrs["COR"]*2
 
-    match atrs["AGI"]:
-        case 1:
-            ataVel = 4
-        case 2|3:
-            ataVel = 3
-        case 4|5:
-            ataVel = 2
-        case 6|7:
-            ataVel = 1
-        case 8:
-            ataVel = 0.5
-
 def adiAtr(aum, atr):
-    global ataVel
-
     if atrs[atr] + aum > 10:
         atrs[atr] = 10
     else:
@@ -147,19 +130,3 @@ def adiAtr(aum, atr):
         if aum > 0:
             vida[0] += 2*aum
             vida[1] += 2*aum
-    if atr == "AGI":
-        match (atrs["AGI"]*mult["AGI"]):
-            case 1:
-                ataVel = 0.25
-            case 2|3:
-                ataVel = 0.4
-            case 4|5:
-                ataVel = 0.5
-            case 6|7:
-                ataVel = 1
-            case 8|9:
-                ataVel = 0.5
-            case 10:
-                ataVel = 0.3
-            case __:
-                ataVel = 0.25
