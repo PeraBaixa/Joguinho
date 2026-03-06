@@ -113,10 +113,10 @@ def retornaUtil(util):
 def retornaItem(item):
     match item[0]:
         case "W":
-            retornaArma(item)
+            return retornaArma(item)
         case "A":
-            retornaArmadura(item)
+            return retornaArmadura(item)
         case "U":
-            retornaItem(item)
+            return retornaItem(item)
         case __:
-            retornaColec(item)
+            return retornaColec(item)
