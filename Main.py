@@ -1,26 +1,23 @@
 import Criaturas, Itens
 import Personagem
 
-achaCriatura = Criaturas.achaCriatura
-achaItem = Itens.Item.achaItem
-
 Personagem.iniAtr([8, 6, 4, 4])
 nerd = Criaturas.Criatura()
 
 
-def criaOrdem(protag=False, *pers):
-    ordem = [pers[0].cod]
-    for p in pers[1:]:
+def criaOrdem(protag=False, *ini):
+    ordem = [ini[0]]
+    for mon in ini[1:]:
         for i, o in enumerate(ordem):
-            if achaCriatura(o).atrs["AGI"] <= p.atrs["AGI"]:
-                ordem.insert(i, p.cod)
+            if o.atrs["AGI"] <= mon.atrs["AGI"]:
+                ordem.insert(i, mon)
                 break
         else:
-            ordem.append(p.cod)
+            ordem.append(mon.cod)
 
     if protag:
-        for i, c in enumerate(ordem):
-            if Personagem.atrs["AGI"] >= achaCriatura(c).atrs["AGI"]:
+        for i, ini in enumerate(ordem):
+            if Personagem.atrs["AGI"] >= ini.atrs["AGI"]:
                 ordem.insert(i, 0)
                 break
         else:
@@ -32,19 +29,21 @@ def criaOrdem(protag=False, *pers):
 while nerd.vida[1] > 0 and Personagem.vida[1] > 0:
     print(f"{Personagem.nome}: {Personagem.vida[1]} pv\tMonstro: {nerd.vida[1]} pv")
     for p in criaOrdem(True, nerd):
-        ataque = 0
+        ataque = None
         if p == 0:
-            ataque = Personagem.atacar()
-            print(f"{Personagem.nome} ataca, dando {ataque} de dano")
-            nerd.sofrerDano(ataque, Personagem.getBon("MEN"))
+            ataque = Personagem.atacar(Itens.retornaItem(Personagem.arma))
+            print(f"{Personagem.nome} ataca, dando {ataque[0]} de dano")
+            nerd.sofrerDano(ataque)
             if nerd.vida[1] <= 0:
                 break
         else:
             ataque = nerd.atacar()
-            print(f"O monstro ataca, dando {ataque} de dano")
-            Personagem.sofrerDano(ataque, nerd.getBon("MEN"))
+            print(f"{nerd.nome} ataca, dando {ataque[0]} de dano")
+            Personagem.sofrerDano(ataque)
             if Personagem.vida[1] <= 0:
                 break
 else:
     print(f"{Personagem.nome}: {Personagem.vida[1]} pv\tMonstro: {nerd.vida[1]} pv")
-    print(f"Vencedor: {f"{Personagem.nome} com {Personagem.vida[1]} de pv" if nerd.vida[1] <= 0 else f"o monstro com {nerd.vida[1]}"}")
+    print("Vencedor:")
+    if nerd.vida[1] > 0: print(f"{Personagem.nome} com {Personagem.vida[1]} de pv") 
+    else: print(f"{nerd.nome} com {nerd.vida[1]} de pv")
