@@ -3,6 +3,7 @@ from random import randint
 criaturas = []
 class Criatura:
     def __init__(obj):
+        obj.nome = "Amigo nerd"
         #Os 3 elementos da lista VIDA representam, respectivamente:
         #vida máxima, vida atual e vida temporária
         obj.vida = [10, 10, 0]
@@ -23,14 +24,7 @@ class Criatura:
 
         obj.cod = (criaturas[-1].cod + 1 if len(criaturas) > 0 else 1)
         criaturas.append(obj)
- 
-        obj.ataVel = 1
-        #1 de AGI = 0.25
-        #2, 3 de AGI = 0.33
-        #4, 5 de AGI = 0.5
-        #6, 7 de AGI = 1
-        #8, 9 de AGI = 2
-        #10 de AGI = 3
+        
         obj.condicoes = []
     
     def getBon(obj, atr):
