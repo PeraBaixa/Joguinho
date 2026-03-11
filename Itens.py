@@ -66,6 +66,9 @@ class Armadura(Item):
         obj.durab = 15
         obj.resis = 2
 
+    def getResis(obj):
+        return resis
+
 class Kevlar(Armadura):
     def __init__(obj):
         super().__init__("Kevlar")
