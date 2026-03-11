@@ -86,19 +86,18 @@ def bonPericia(pericia):
 
 def atacar(arma):
     dano = (arma.getDano() + bonPericia(arma.pericia))
-    crit = False
+    crit = 0
 
     if randint(1, 100) <= (20*getBon("VON")):
         print("CRITICO!")
-        crit = True
-        dano*=2
+        crit = dano
 
     return (dano, crit, getBon("MEN"))
 
 def sofrerDano(info):
     desviar = getBon("AGI")*10
     porcMax = 100 + (info[2]*10)
-    danofin = info[0]
+    danofin = info[0]+info[1]
 
     if randint(1, porcMax) > desviar or info[1]:
         if vida[2] > 0:
