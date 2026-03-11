@@ -39,17 +39,16 @@ class Criatura:
     def atacar(obj):
         #Ataque de garras
         dano = randint(0, 2)
-        crit = False
+        crit = 0
 
         if randint(1, 100) <= (20*obj.getBon("VON")):
             print("CRITICO!")
-            crit = True
-            dano*=2
+            crit = dano
 
         return (dano, crit, obj.getBon("MEN"))
 
     def sofrerDano(obj, info):
-        danofin = info[0]
+        danofin = info[0]+info[1]
         desviar = obj.getBon("AGI")*10
         porcMax = 100 + (info[2]*10)
 
