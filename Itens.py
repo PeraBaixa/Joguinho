@@ -114,6 +114,8 @@ def retornaUtil(util):
             return PotMente()
     
 def retornaItem(item):
+    if not item: return None
+    
     match item[0]:
         case "W":
             return retornaArma(item)
