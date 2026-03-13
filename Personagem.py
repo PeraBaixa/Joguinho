@@ -105,6 +105,10 @@ def sofrerDano(info):
             vida[2] -= info[0]
             if danofin < 0: danofin = 0
             if vida[2] < 0: vida[2] = 0
+
+        if "defesa" in condicoes:
+            danofin -= info[3]
+            if danofin < 0: danofin = 0
         
         vida[1] -= danofin
     else:
