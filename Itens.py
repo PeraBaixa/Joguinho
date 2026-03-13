@@ -67,7 +67,7 @@ class Armadura(Item):
         obj.resis = 2
 
     def getResis(obj):
-        return resis
+        return obj.resis
 
 class Kevlar(Armadura):
     def __init__(obj):
