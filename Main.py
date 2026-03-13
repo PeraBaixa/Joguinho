@@ -3,6 +3,7 @@ import Personagem
 from random import randrange
 
 Personagem.iniAtr([8, 6, 4, 10])
+Personagem.armadura = "A1"
 nerd = Criaturas.Criatura()
 
 
@@ -31,26 +32,51 @@ def combate(*inimigos):
     inivivo = list(inimigos)
     ataque, defesa = None, None
     arma = Itens.retornaItem(Personagem.arma)
+    armadura = Itens.retornaItem(Personagem.armadura) 
 
     while Personagem.vida[1] > 0 and len(inivivo) > 0:
         print(f"{Personagem.nome}: {Personagem.vida[1]} pv", end="")
         [print(f"\t{i.nome}: {i.vida[1]} pv", end="") for i in inimigos]
         print()
 
-        for p in criaOrdem(inivivo):
-            if p:
-                ataque = p.atacar()
-                print(f"{p.nome} ataca, dando {ataque[0]} de dano")
+        for ini in criaOrdem(inivivo):
+            if ini:
+                ataque = ini.atacar()
+                print(f"{ini.nome} ataca, dando {ataque[0]} de dano")
+                if "defesa" in Personagem.condicoes and armadura:
+                    ataque += (armadura.getResis(), )
+                else:
+                    ataque += (0, )
                 Personagem.sofrerDano(ataque)
                 if Personagem.vida[1] <= 0: break
             
             else:
-                ataque = Personagem.atacar(arma)
-                alvo = inivivo[(randrange(0, len(inivivo)))]
-                print(f"{Personagem.nome} ataca, dando {ataque[0]} de dano")
-                alvo.sofrerDano(ataque)
-                if alvo.vida[1] <= 0: inivivo.remove(alvo)
-                if len(inivivo) <= 0: break
+                if "defesa" in Personagem.condicoes: Personagem.condicoes.remove("defesa")
+                print(f"Sua vez, {Personagem.nome}!")
+                print("1 - Atacar")
+                print("2 - Defender")
+                try:
+                    opt = int(input("Decida sua ação: "))
+                except:
+                    opt = None
+
+                match opt:
+                    #Atacar
+                    case 1:
+                        ataque = Personagem.atacar(arma)
+                        alvo = inivivo[(randrange(0, len(inivivo)))]
+                        print(f"{Personagem.nome} ataca, dando {ataque[0]+ataque[1]} de dano")
+                        alvo.sofrerDano(ataque)
+                        if alvo.vida[1] <= 0: inivivo.remove(alvo)
+                        if len(inivivo) <= 0: break
+                    #Defender
+                    case 2:
+                        print(f"{Personagem.nome} se defende!")
+                        Personagem.condicoes.append("defesa")
+                    #Fugir
+                    case __:
+                        pass
+    
     else:
         print(f"{Personagem.nome}: {Personagem.vida[1]} pv", end="")
         [print(f"\t{i.nome}: {i.vida[1]} pv", end="") for i in inimigos]
@@ -60,28 +86,12 @@ def combate(*inimigos):
         else:
             print(f"infelizmente, {Personagem.nome} perdeu miseravelmente")
 
-combate(Criaturas.Criatura(), Criaturas.Criatura())
+def mostraOpcoes(arma, armor):
+    opt = None
+    info = None
 
-"""
-#Simulação de combate simples:
-while nerd.vida[1] > 0 and Personagem.vida[1] > 0:
-    print(f"{Personagem.nome}: {Personagem.vida[1]} pv\tMonstro: {nerd.vida[1]} pv")
-    for p in criaOrdem(True, nerd):
-        ataque = None
-        if p == 0:
-            ataque = Personagem.atacar(Itens.retornaItem(Personagem.arma))
-            print(f"{Personagem.nome} ataca, dando {ataque[0]} de dano")
-            nerd.sofrerDano(ataque)
-            if nerd.vida[1] <= 0:
-                break
-        else:
-            ataque = nerd.atacar()
-            print(f"{nerd.nome} ataca, dando {ataque[0]} de dano")
-            Personagem.sofrerDano(ataque)
-            if Personagem.vida[1] <= 0:
-                break
-else:
-    print(f"{Personagem.nome}: {Personagem.vida[1]} pv\tMonstro: {nerd.vida[1]} pv")
-    print("Vencedor:")
-    if nerd.vida[1] > 0: print(f"{Personagem.nome} com {Personagem.vida[1]} de pv") 
-    else: print(f"{nerd.nome} com {nerd.vida[1]} de pv")"""
+    
+
+    return opt, info
+
+combate(Criaturas.Criatura(), Criaturas.Criatura())
