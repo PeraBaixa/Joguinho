@@ -63,7 +63,6 @@ class Armadura(Item):
     def __init__(obj, nome="Jaqueta de couro"):
         super().__init__(nome, "ARMADURA")
         obj.id = "A1"
-        obj.durab = 15
         obj.resis = 2
 
     def getResis(obj):
