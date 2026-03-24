@@ -45,13 +45,13 @@ def combate(*inimigos):
                 print(f"{ini.nome} ataca, dando {ataque[0]} de dano")
                 if "defesa" in Personagem.condicoes and armadura:
                     ataque += (armadura.getResis(), )
+                    Personagem.condicoes.remove("defesa")
                 else:
                     ataque += (0, )
                 Personagem.sofrerDano(ataque)
                 if Personagem.vida[1] <= 0: break
-            
+            #Vez do personagem
             else:
-                if "defesa" in Personagem.condicoes: Personagem.condicoes.remove("defesa")
                 print(f"Sua vez, {Personagem.nome}!")
                 print("1 - Atacar")
                 print("2 - Defender")
@@ -63,8 +63,15 @@ def combate(*inimigos):
                 match opt:
                     #Atacar
                     case 1:
+                        if len(inivivo) > 1:
+                            [print(f"{n+1} - {i.nome}") for n,i in enumerate(inivivo)]
+                            try:
+                                alvo = inivivo[int(input("Escolha qual inimigo atacar: "))-1]
+                            except:
+                                alvo = inivivo[0]
+                        else:
+                            alvo = inivivo[0]
                         ataque = Personagem.atacar(arma)
-                        alvo = inivivo[(randrange(0, len(inivivo)))]
                         print(f"{Personagem.nome} ataca, dando {ataque[0]+ataque[1]} de dano")
                         alvo.sofrerDano(ataque)
                         if alvo.vida[1] <= 0: inivivo.remove(alvo)
@@ -76,22 +83,15 @@ def combate(*inimigos):
                     #Fugir
                     case __:
                         pass
+        print()
     
     else:
         print(f"{Personagem.nome}: {Personagem.vida[1]} pv", end="")
         [print(f"\t{i.nome}: {i.vida[1]} pv", end="") for i in inimigos]
-        print("\n")
+        print()
         if Personagem.vida[1] > 0:
             print(f"Parabéns, {Personagem.nome} venceu o combate!")
         else:
             print(f"infelizmente, {Personagem.nome} perdeu miseravelmente")
 
-def mostraOpcoes(arma, armor):
-    opt = None
-    info = None
-
-    
-
-    return opt, info
-
-combate(Criaturas.Criatura(), Criaturas.Criatura())
+combate(Criaturas.Criatura())
