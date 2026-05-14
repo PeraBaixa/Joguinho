@@ -1,11 +1,74 @@
 import Criaturas, Itens
-import Personagem
+import Personagem as P
 from random import randrange
 
-Personagem.iniAtr([8, 6, 4, 10])
-Personagem.armadura = "A1"
-nerd = Criaturas.Criatura()
+INIMIGO = Criaturas.Criatura()
 
+def atacar(prot=True):
+    if INIMIGO == None: return
+    log = []
+    cond = None
+
+    nome = (P.nome if prot else INIMIGO.nome)
+    nomeIni = (INIMIGO.nome if prot else P.nome)
+    ataque = (P.atacar(Itens.retornaItem(P.arma)) if prot else INIMIGO.atacar())
+
+    return ("atk", ataque)
+    if "defesa" in (INIMIGO.condicoes if prot else P.condicoes):
+        if prot:
+            ataque += (INIMIGO.defender(), )
+            INIMIGO.condicoes.remove("defesa")
+
+        else:
+            ataque += ((Itens.retornaItem(P.armadura).getResis() if P.armadura else 0), )
+            P.condicoes.remove("defesa")
+    else:
+        ataque += (0, )
+
+    cond = (INIMIGO.sofrerDano(ataque) if prot else P.sofrerDano(ataque))
+
+    log.append(f"{nome} ataca")
+    
+    if cond:
+        if ataque[1]: log.append("Acerto crítico!")
+        log.append(f"{nomeIni} recebeu {ataque[0]+ataque[1]} pontos de dano")
+    else:
+        log.append(f"{nomeIni} desviou!")
+    
+    return log
+
+def defender(prot):
+    if not INIMIGO: return
+
+    cond = (P.condicoes if prot else INIMIGO.condicoes)
+    cond.append("defesa")
+    return "def"
+    return [f"{P.nome if prot else INIMIGO.nome} se defende!"]
+    
+
+def iniEscolha():
+    match INIMIGO.definirEscolha():
+        case "atk":
+            return atacar(False)
+        case "def":
+            return defender(False)
+        case __:
+            return [f"{INIMIGO.nome} não faz nada"]
+        
+def interagir(protAcao, iniAcao):
+    log = []
+    if protAcao[0] == "def": log.append(f"{P.nome} se defende!")     
+    if iniAcao[0] == "def": log.append(f"{INIMIGO.nome} se defende!")
+
+    if protAcao[0] == "atk":
+        if INIMIGO.sofrerDano(protAcao[1]): log.append(f"{INIMIGO.nome} sofreu {protAcao[1][0]+protAcao[1][1]} pontos de dano")
+        else: log.append(f"{INIMIGO.nome} desviou!")
+    if iniAcao[0] == "atk":
+        if P.sofrerDano(iniAcao[1]): log.append(f"{P.nome} sofreu {iniAcao[1][0]+iniAcao[1][1]} pontos de dano")
+        else: log.append(f"{P.nome} desviou!")
+    
+
+"""
 def criaOrdem(ini):
     ordem = [ini[0]]
     for mon in ini[1:]:
@@ -92,3 +155,5 @@ def combate(*inimigos):
             print(f"Parabéns, {Personagem.nome} venceu o combate!")
         else:
             print(f"infelizmente, {Personagem.nome} perdeu miseravelmente")
+        
+"""

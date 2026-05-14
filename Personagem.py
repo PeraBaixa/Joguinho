@@ -1,9 +1,14 @@
 from random import randint
+from Itens import encontraItem
 
 nome = "Carlos"
 #Os 3 elementos da lista VIDA representam, respectivamente:
 #vida máxima, vida atual e vida temporária
-vida = [10, 10, 0]
+vida = {
+    "atual": 10,
+    "max": 10,
+    "escudo": 10
+}
 
 atrs = {
     "COR": 5,
@@ -56,8 +61,8 @@ def receberEfeito(origem, code):#Os parâmetros são o código do item e a lista
     for efeito in code():
         match efeito[1]:
             case "VID":
-                vida[1] += efeito[1]
-                if vida[1] > vida[0]: vida[1] = vida[0]
+                vida["atual"] += efeito[1]
+                if vida["atual"] > vida["max"]: vida["atual"] = vida["max"]
 
             case "COR"|"AGI"|"MEN"|"VON":
                 bonusTemp[efeito[1]] += efeito[0]
@@ -100,19 +105,23 @@ def sofrerDano(info):
     danofin = info[0]+info[1]
 
     if randint(1, porcMax) > desviar or info[1]:
-        if vida[2] > 0:
-            danofin -= vida[2]
-            vida[2] -= info[0]
+        if vida["escudo"] > 0:
+            danofin -= vida["escudo"]
+            vida["escudo"] -= info[0]
             if danofin < 0: danofin = 0
-            if vida[2] < 0: vida[2] = 0
+            if vida["escudo"] < 0: vida["escudo"] = 0
 
         if "defesa" in condicoes:
-            danofin -= info[3]
+            danofin -= (encontraItem(armadura).getResis() if armadura else 0)
+            condicoes.remove("defesa")
             if danofin < 0: danofin = 0
         
-        vida[1] -= danofin
+        vida["atual"] -= danofin
+
+        print("danofin = "+str(danofin))
+        return True
     else:
-        print(nome + " desviou!")
+        return False
 
 def iniAtr(ats):
     atrs["COR"] = ats[0]

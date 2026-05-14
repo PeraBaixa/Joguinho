@@ -5,8 +5,12 @@ class Criatura:
     def __init__(obj):
         obj.nome = "Amigo nerd"
         #Os 3 elementos da lista VIDA representam, respectivamente:
-        #vida máxima, vida atual e vida temporária
-        obj.vida = [10, 10, 0]
+        #vida atual, vida máxima e vida temporária
+        obj.vida = {
+            "atual":10,
+            "max": 10,
+            "escudo": 0
+        }
 
         obj.atrs = {
             "COR": 4,
@@ -21,6 +25,7 @@ class Criatura:
             "VON": 1
         }
         obj.entro = 9
+        obj.defesa = 1
 
         obj.cod = (criaturas[-1].cod + 1 if len(criaturas) > 0 else 1)
         criaturas.append(obj)
@@ -47,21 +52,40 @@ class Criatura:
 
         return (dano, crit, obj.getBon("MEN"))
 
+    def defender(obj):
+        return 2
+
+    def definirEscolha(obj):
+        chance = randint(1, 100)
+
+        if chance == 1:
+            return None
+        elif chance < 30:
+            return "def"
+        else:
+            return "atk"
+
     def sofrerDano(obj, info):
         danofin = info[0]+info[1]
         desviar = obj.getBon("AGI")*10
         porcMax = 100 + (info[2]*10)
 
-        if randint(1, porcMax) > desviar or info[1]:
-            if obj.vida[2] > 0:
-                danofin -= obj.vida[2]
-                obj.vida[2] -= info[0]
+        if randint(1, porcMax) > desviar:
+            if obj.vida["escudo"] > 0:
+                danofin -= obj.vida["escudo"]
+                obj.vida["escudo"] -= (info[0]+info[1])
                 if danofin < 0: danofin = 0
-                if obj.vida[2] < 0: obj.vida[2] = 0 
+                if obj.vida["escudo"] < 0: obj.vida[2] = 0
+
+            if "defesa" in obj.condicoes:
+                danofin =- obj.defesa
+                obj.condicoes.remove("defesa")
+                if danofin < 0: danofin = 0
             
-            obj.vida[1] -= danofin
+            obj.vida["atual"] -= danofin
+            return True
         else:
-            print("O monstro desviou!")
+            return False
 
     @staticmethod
     def achaCriatura(cri):
